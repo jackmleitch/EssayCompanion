@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     text = """
         The ultimate test of your knowledge is your capacity to convey it to another. 
-        Best way: learning by teaching & practicing. Heard D. Mermin once describe a
+        Best way: learning by teaching & practicing. D. Mermin once described a
         person who has a good understanding of physics but can't convey it, as being 
         a natural phenomenon, not a physicist. 
         """
