@@ -15,12 +15,13 @@ class ParaphraseModel:
     Provides utility to load HuggingFace paraphrasing model and generate paraphrased text.
     """
     def __init__(self, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality", 
-        num_beams=3) -> None:
+        num_beams=5) -> None:
         """
         :param model_ckpt: path to HuggingFace model checkpoint, default is the PEGASUS paraphraser
         :param num_beams: number of beams to perform beam search with when generating new text
         """
         self.num_beams = num_beams
+        self.model_ckpt = model_ckpt
         self.torch_device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Loading {model_ckpt} tokenizer and model...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
@@ -55,6 +56,9 @@ class ParaphraseModel:
         translated = self.model.generate(**batch, max_length=100, num_beams=self.num_beams,
             num_return_sequences=1, temperature=1.5)
         paraphrased_text = self.tokenizer.batch_decode(translated, skip_special_tokens=True)
+        if self.model_ckpt == "ramsrigouthamg/t5-large-paraphraser-diverse-high-quality":
+            # remove 'paraphrasedoutput: ' from result
+            paraphrased_text = [sentence[19:] for sentence in paraphrased_text]
         paraphrased_text = " ".join(paraphrased_text)
         return paraphrased_text
 
@@ -66,6 +70,6 @@ if __name__ == "__main__":
         a natural phenomenon, not a physicist. 
         """
     # model_ckpt="tuner007/pegasus_paraphrase"
-    paraphraser = ParaphraseModel(num_beams=3)
+    paraphraser = ParaphraseModel()
     paraphased_text = paraphraser.paraphrase_text_model(text)
     print(paraphased_text)
