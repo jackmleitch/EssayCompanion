@@ -51,3 +51,6 @@ docs/_build/
 
 # config file 
 *.conf
+
+# models 
+models/
