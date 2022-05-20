@@ -1,9 +1,11 @@
 from ast import Str
 import torch
 import nltk
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from nltk.tokenize import sent_tokenize
 
+from time import perf_counter
+import numpy as np
 # download nltk punkt sentence tokenizer if it's not found in files
 try:
     nltk_path = nltk.find("corpora/punkt")
@@ -26,9 +28,24 @@ class ParaphraseModel:
         self.model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt)
         print("Model loaded!")
 
-    def paraphrase_text(self, input_text: str) -> str:
+    def paraphrase_text_pipeline(self, input_text: str) -> str:
         """
-        Tokenize sentences and then encoder-decoder model to paraphrase text.
+        Tokenize sentences and then encoder-decoder model to paraphrase text using pipeline.
+        :param input_text: input text to feed to model
+        :return: paraphrased text
+        """
+        pipe = pipeline(task="text2text-generation", model=self.model, tokenizer=self.tokenizer)
+        sentences = sent_tokenize(input_text)
+        paraphrased_text = []
+        for sentence in sentences:
+            paraphrased_text.append(pipe(sentence, max_length=60, num_beams=self.num_beams,
+            num_return_sequences=1, temperature=1.5)[0]['generated_text'])
+        paraphrased_text = " ".join(paraphrased_text)
+        return paraphrased_text
+
+    def paraphrase_text_model(self, input_text: str) -> str:
+        """
+        Tokenize sentences and then encoder-decoder model to paraphrase text using model.
         :param input_text: input text to feed to model
         :return: paraphrased text
         """
@@ -48,6 +65,16 @@ if __name__ == "__main__":
         person who has a good understanding of physics but can't convey it, as being 
         a natural phenomenon, not a physicist. 
         """
-    paraphraser = ParaphraseModel()
-    paraphased_text = paraphraser.paraphrase_text(text)
-    print(paraphased_text)
+    model_ckpt = "ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"
+    paraphraser = ParaphraseModel(model_ckpt=model_ckpt)
+
+    latencies = []
+    for _ in range(10):
+        start_time = perf_counter()
+        _ = paraphraser.paraphrase_text_pipeline(text)
+        latency = perf_counter() - start_time
+        latencies.append(latency)
+    # Compute run statistics
+    time_avg_ms = 1000 * np.mean(latencies)
+    time_std_ms = 1000 * np.std(latencies)
+    print(f"Average latency (ms) - {time_avg_ms:.2f} +\- {time_std_ms:.2f}")
