@@ -15,7 +15,7 @@ class ParaphraseModel:
     Provides utility to load HuggingFace paraphrasing model and generate paraphrased text.
     """
     def __init__(self, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality", 
-        num_beams=10) -> None:
+        num_beams=3) -> None:
         """
         :param model_ckpt: path to HuggingFace model checkpoint, default is the PEGASUS paraphraser
         :param num_beams: number of beams to perform beam search with when generating new text
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         person who has a good understanding of physics but can't convey it, as being 
         a natural phenomenon, not a physicist. 
         """
-    model_ckpt="tuner007/pegasus_paraphrase"
-    paraphraser = ParaphraseModel(model_ckpt=model_ckpt)
+    # model_ckpt="tuner007/pegasus_paraphrase"
+    paraphraser = ParaphraseModel(num_beams=3)
     paraphased_text = paraphraser.paraphrase_text_model(text)
     print(paraphased_text)
