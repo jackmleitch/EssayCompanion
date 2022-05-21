@@ -1,4 +1,5 @@
 import nltk
+from os.path import exists
 from fastT5 import export_and_get_onnx_model, get_onnx_model
 from transformers import AutoTokenizer
 from nltk.tokenize import sent_tokenize
@@ -11,10 +12,13 @@ except Exception:
 
 model_ckpt = "ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"
 
-# export model to ONNX and quantize from 32bit to 8bit
-print(f"Exporting f{model_ckpt} to ONNX and quantizing...")
-model = export_and_get_onnx_model(model_ckpt)
-print("Model exported and saved to /models directory")
+if not exists("models/t5-large-paraphraser-diverse-high-quality-decoder-quantized.onnx"):
+    # export model to ONNX and quantize from 32bit to 8bit
+    print(f"Exporting f{model_ckpt} to ONNX and quantizing...")
+    model = export_and_get_onnx_model(model_ckpt)
+    print("Model exported and saved to /models directory")
+else:
+    print("ONNX model already exists")
 
 if __name__ == '__main__':
     # run already exported model
