@@ -6,14 +6,18 @@ RUN apt-get update -y && \
     apt-get install build-essential -y \
     supervisor wget unzip
 
-WORKDIR /Users/Jack/Documents/projects/EssayCompanion/
-
-COPY onnx_T5_model.py /Users/Jack/Documents/projects/EssayCompanion/src/paraphrasing_model/onnx_T5_model.py
-COPY main.py /Users/Jack/Documents/projects/EssayCompanion/src/main.py
-COPY requirements.txt /Users/Jack/Documents/projects/EssayCompanion/requirements.txt
+COPY ./src /api/api
+COPY ./models /api/models
+COPY requirements.txt /requirements.txt
 
 RUN pip install -r requirements.txt
+RUN python -m nltk.downloader punkt
+
+ENV PYTHONPATH=/api
+WORKDIR /api
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uvicorn"]
+
+CMD ["api.main:app", "--host", "0.0.0.0"]
