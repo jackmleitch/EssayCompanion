@@ -1,5 +1,3 @@
-from tkinter import ON
-from xml.dom.pulldom import END_ELEMENT
 import torch
 from onnxruntime import (GraphOptimizationLevel, InferenceSession, SessionOptions)
 from transformers import AutoTokenizer, T5ForConditionalGeneration, AutoConfig
@@ -87,22 +85,22 @@ class OnnxT5(T5ForConditionalGeneration):
         return Seq2SeqLMOutput(logits=logits, past_key_values=past_key_values)
 
 class OnnxPipeline:
-    def __init__(self, model, tokenizer, num_beams=5):
-        self.model = model
-        self.tokenizer = tokenizer
+    def __init__(self, num_beams=5, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
+        self.model = OnnxT5()
+        self.model.eval()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
         self.num_beams = num_beams
     def __call__(self, query):
-        model.eval()
         sentences = sent_tokenize(query)
-        with torch.no_grad():
-            paraphrased_text = []
-            for sentence in sentences:
-                batch = (self.tokenizer(sentence, truncation=True, padding="longest",
-                    max_length=100, return_tensors="pt").to('cpu')) 
+        paraphrased_text = []
+        for sentence in sentences:
+            batch = (self.tokenizer(sentence, truncation=True, padding="longest",
+                max_length=100, return_tensors="pt").to('cpu')) 
+            with torch.no_grad():
                 translated = self.model.generate(**batch, max_length=100, num_beams=self.num_beams,
                     num_return_sequences=1, temperature=1.5)
-                result = self.tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
-                paraphrased_text.append(result)
+            result = self.tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            paraphrased_text.append(result)
         paraphrased_text = [sentence[19:] for sentence in paraphrased_text]
         paraphrased_text = " ".join(paraphrased_text)
         return paraphrased_text
@@ -110,11 +108,8 @@ class OnnxPipeline:
 if __name__ == '__main__':
 
     print('Loading onnx models + tokenizer...')
-    model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"
-    model = OnnxT5()
-    tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+    pipe = OnnxPipeline()
     print('Loaded!')
-    pipe = OnnxPipeline(model, tokenizer)
     query = """
         The ultimate test of your knowledge is your capacity to convey it to another. 
         The best way of learning is by teaching & practicing. D. Mermin once described a
