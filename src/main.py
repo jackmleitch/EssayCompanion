@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 
-from src.paraphrasing_model.onnx_T5_model import OnnxPipeline
+from .paraphrasing_model.onnx_T5_model import OnnxPipeline
 
 # load paraphrasing model
 print('Loading model & tokenizer...')
