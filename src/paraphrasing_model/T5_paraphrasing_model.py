@@ -50,9 +50,8 @@ class ParaphraseModel:
         :return: paraphrased text
         """
         sentences = sent_tokenize(input_text)
-        paraphrased_text = []
         batch = (self.tokenizer(sentences, truncation=True, padding="longest",
-            max_length=100, return_tensors="pt").to('cpu'))#self.torch_device))
+            max_length=100, return_tensors="pt").to(self.torch_device))
         translated = self.model.generate(**batch, max_length=100, num_beams=self.num_beams,
             num_return_sequences=1, temperature=1.5)
         paraphrased_text = self.tokenizer.batch_decode(translated, skip_special_tokens=True)
@@ -73,31 +72,3 @@ if __name__ == "__main__":
     paraphraser = ParaphraseModel()
     paraphased_text = paraphraser.paraphrase_text_model(text)
     print(paraphased_text)
-
-    from time import perf_counter
-    import numpy as np
-    # run already exported model
-    latencies_model = [] 
-    for _ in range(10):
-        start_time = perf_counter()
-        
-        paraphraser = ParaphraseModel()
-        
-        latency = perf_counter() - start_time
-        latencies_model.append(latency)
-
-    latencies_pred = [] 
-    for _ in range(10):
-        start_time = perf_counter()
-        
-        paraphased_text = paraphraser.paraphrase_text_model(text)
-        
-        latency = perf_counter() - start_time
-        latencies_pred.append(latency)
-
-    model_avg_ms = 1000 * np.mean(latencies_model)
-    model_std_ms = 1000 * np.std(latencies_model)
-    pred_avg_ms = 1000 * np.mean(latencies_pred)
-    pred_std_ms = 1000 * np.std(latencies_pred)
-    print(f"Average model load latency (ms) - {model_avg_ms:.2f} +/- {model_std_ms:.2f}")
-    print(f"Average model translation latency (ms) - {pred_avg_ms:.2f} +/- {pred_std_ms:.2f}")
