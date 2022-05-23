@@ -2,6 +2,7 @@ fastapi==0.78.0
 nltk==3.7
 onnxruntime==1.10.0
 pydantic==1.9.1
-torch==1.11.0
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.11.0+cpu
 transformers==4.19.2
 uvicorn==0.17.6
