@@ -1,17 +1,14 @@
-FROM python:3.8-slim
-
-RUN apt-get update -y && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y && \
-    apt-get install build-essential -y \
-    supervisor wget unzip
+FROM ubuntu:20.04
 
 COPY ./src /api/api
 COPY ./models /api/models
 COPY requirements.txt /requirements.txt
 
-RUN pip install -r requirements.txt
-RUN python -m nltk.downloader punkt
+RUN apt-get update \
+    && apt-get install python3-dev python3-pip -y \
+    && pip3 install -r requirements.txt
+
+RUN python3 -m nltk.downloader punkt
 
 ENV PYTHONPATH=/api
 WORKDIR /api
@@ -19,5 +16,4 @@ WORKDIR /api
 EXPOSE 8000
 
 ENTRYPOINT ["uvicorn"]
-
 CMD ["api.main:app", "--host", "0.0.0.0"]
