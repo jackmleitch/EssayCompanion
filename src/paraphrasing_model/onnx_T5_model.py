@@ -33,9 +33,9 @@ class OnnxT5(T5ForConditionalGeneration):
     def __init__(self, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
         config = AutoConfig.from_pretrained(model_ckpt)
         super().__init__(config)
-        encoder_session = create_model_for_provider("models/t5-large-paraphraser-diverse-high-quality-encoder-quantized.onnx")
-        decoder_init_session = create_model_for_provider("models/t5-large-paraphraser-diverse-high-quality-init-decoder-quantized.onnx")
-        decoder_session = create_model_for_provider("models/t5-large-paraphraser-diverse-high-quality-decoder-quantized.onnx")
+        encoder_session = create_model_for_provider("models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-encoder-quantized.onnx")
+        decoder_init_session = create_model_for_provider("models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-init-decoder-quantized.onnx")
+        decoder_session = create_model_for_provider("models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-decoder-quantized.onnx")
         self.encoder = T5Encoder(encoder_session)
         self.decoder = T5Decoder(decoder_session)
         self.decoder_init = T5DecoderInit(decoder_init_session)
@@ -78,10 +78,10 @@ class OnnxPipeline:
     '''
     Model inference pipeline 
     '''
-    def __init__(self, num_beams=5, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
+    def __init__(self, num_beams=5):
         self.model = OnnxT5()
         self.model.eval()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+        self.tokenizer = AutoTokenizer.from_pretrained("models/paraphrase/tokenizer/")
         self.num_beams = num_beams
 
     def __call__(self, query: str) -> str:
