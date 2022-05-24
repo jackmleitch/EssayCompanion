@@ -13,6 +13,12 @@ except Exception:
     nltk.download('punkt')
 
 def create_model_for_provider(model_path, provider='CPUExecutionProvider'):
+    '''
+    Create CPU inference session for ONNX runtime to boost performance
+    :param model_path: path to *.onnx model
+    :param provider: CPU/CUDA
+    :return: onnx runtime session
+    '''
     options = SessionOptions()
     options.intra_op_num_threads = 1
     options.graph_optimization_level = GraphOptimizationLevel.ORT_ENABLE_ALL
@@ -21,7 +27,9 @@ def create_model_for_provider(model_path, provider='CPUExecutionProvider'):
     return session
 
 class OnnxT5(T5ForConditionalGeneration):
-    """creates a T5 model using onnx sessions (encode, decoder & init_decoder)"""
+    """
+    Creates a T5 model using onnx sessions encode, decoder & init_decoder
+    """
     def __init__(self, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
         config = AutoConfig.from_pretrained(model_ckpt)
         super().__init__(config)
@@ -32,25 +40,11 @@ class OnnxT5(T5ForConditionalGeneration):
         self.decoder = T5Decoder(decoder_session)
         self.decoder_init = T5DecoderInit(decoder_init_session)
 
-    def forward(
-        self,
-        input_ids=None,
-        attention_mask=None,
-        decoder_input_ids=None,
-        decoder_attention_mask=None,
-        head_mask=None,
-        decoder_head_mask=None,
-        cross_attn_head_mask=None,
-        encoder_outputs=None,
-        past_key_values=None,
-        inputs_embeds=None,
-        decoder_inputs_embeds=None,
-        labels=None,
-        use_cache=None,
-        output_attentions=None,
-        output_hidden_states=None,
-        return_dict=None,
-    ):
+    def forward(self, input_ids=None, attention_mask=None, decoder_input_ids=None,
+        decoder_attention_mask=None, head_mask=None, decoder_head_mask=None,
+        cross_attn_head_mask=None, encoder_outputs=None, past_key_values=None,
+        inputs_embeds=None, decoder_inputs_embeds=None, labels=None, use_cache=None,
+        output_attentions=None, output_hidden_states=None, return_dict=None):
 
         if encoder_outputs is None:
             # convert encoder inputs in embeddings if needed
@@ -74,23 +68,27 @@ class OnnxT5(T5ForConditionalGeneration):
             logits, past_key_values = init_onnx_outputs
 
         else:
-            onnx_outputs = self.decoder(
-                decoder_input_ids,
-                attention_mask,
-                encoder_hidden_states,
-                past_key_values,
-            )
+            onnx_outputs = self.decoder(decoder_input_ids, attention_mask, encoder_hidden_states,
+                past_key_values)
             logits, past_key_values = onnx_outputs
 
         return Seq2SeqLMOutput(logits=logits, past_key_values=past_key_values)
 
 class OnnxPipeline:
+    '''
+    Model inference pipeline 
+    '''
     def __init__(self, num_beams=5, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
         self.model = OnnxT5()
         self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
         self.num_beams = num_beams
-    def __call__(self, query):
+
+    def __call__(self, query: str) -> str:
+        '''
+        Splits up input query into sentences and makes calls to the optimized T5 model
+        :param query: input query to pass to the model
+        '''
         sentences = sent_tokenize(query)
         paraphrased_text = []
         for sentence in sentences:

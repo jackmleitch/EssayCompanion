@@ -1,3 +1,5 @@
+# Use FastT5 module to convert torch model to ONNX and Quantize
+
 import nltk
 from os.path import exists
 from fastT5 import export_and_get_onnx_model, get_onnx_model
