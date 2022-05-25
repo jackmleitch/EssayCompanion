@@ -16,15 +16,21 @@ print('NER model & tokenizer loaded!')
 
 app = FastAPI()
 
-class ParaphrasingRequest(BaseModel):
+class Request(BaseModel):
     text: str    
 class ParaphrasingResponse(BaseModel):
     text: str
 
-class NERRequest(BaseModel):
+class EntityData(BaseModel):
+    start: int
+    end: int
+    label: str
+class RenderData(BaseModel):
     text: str
+    ents: List[EntityData]
+    title: None
 class NERResponse(BaseModel):
-    render_data: List(dict)
+    render_data: List[RenderData]
 
 
 @app.get("/")
@@ -32,9 +38,9 @@ def get_root():
     return "This is the RESTful API for EssayCompanion"
 
 @app.post("/paraphrase", response_model=ParaphrasingResponse)
-async def predict(request: ParaphrasingRequest):
+async def predict(request: Request):
     return ParaphrasingResponse(text=paraphrasing_pipeline(request.text))
 
 @app.post("/ner", response_model=NERResponse)
-async def predict(request: NERRequest):
+async def predict(request: Request):
     return NERResponse(render_data=ner_pipeline(request.text))
