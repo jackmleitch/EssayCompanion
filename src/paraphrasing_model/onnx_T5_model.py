@@ -74,7 +74,7 @@ class OnnxT5(T5ForConditionalGeneration):
 
         return Seq2SeqLMOutput(logits=logits, past_key_values=past_key_values)
 
-class OnnxPipeline:
+class ParaphraseOnnxPipeline:
     '''
     Model inference pipeline 
     '''
@@ -106,7 +106,7 @@ class OnnxPipeline:
 if __name__ == '__main__':
 
     print('Loading onnx models + tokenizer...')
-    pipe = OnnxPipeline()
+    pipe = ParaphraseOnnxPipeline()
     print('Loaded!')
     query = """
         The ultimate test of your knowledge is your capacity to convey it to another. 
