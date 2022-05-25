@@ -45,7 +45,7 @@ class NEROnnxModel():
         pre_entities = self.gather_pre_entities(**model_outputs)
         entities = self.aggregate_words(pre_entities)
         entities = self.group_entities(entities)
-        results = self.build_final_output(entities)
+        results = self.build_final_output(sentence, entities)
         return results
 
     def gather_pre_entities(self, sentence: str, input_ids: np.ndarray, predictions: List[int],
@@ -139,22 +139,25 @@ class NEROnnxModel():
             entity_groups.append(self.group_sub_entities(entity_group_disagg))
         return entity_groups
 
-    def build_final_output(self, entity_groups: List[dict]) -> List[dict]:
+    def build_final_output(self, sentence: str, entity_groups: List[dict]) -> List[dict]:
         entities = []
         for entity_group in entity_groups:
-            entry = {}
-            entry['start'] = entity_group['start']
-            entry['end'] = entity_group['end']
-            entry['label'] = entity_group['entity_group']
-            entities.append(entry)
-        render_data = [{'text': query, 'ents': entities, 'title': None}]
+            if entity_group['entity_group'] == 'O':
+                continue
+            else:
+                entry = {}
+                entry['start'] = entity_group['start']
+                entry['end'] = entity_group['end']
+                entry['label'] = entity_group['entity_group']
+                entities.append(entry)
+        render_data = [{'text': sentence, 'ents': entities, 'title': None}]
         return render_data
     
 if __name__ == '__main__':
     model_ckpt = "models/ner/model/model.onnx"
-    query = "Jack Sparrow lives in New York!"
-    # query = "Albert Einstein was born at Ulm, in Württemberg, Germany, on March 14, 1879. Six weeks later the family moved to Munich, where he later on began his schooling at the Luitpold Gymnasium. Later, they moved to Italy and Albert continued his education at Aarau, Switzerland and in 1896 he entered the Swiss Federal Polytechnic School in Zurich to be trained as a teacher in physics and mathematics."
+    sentence = "Jack Sparrow lives in New York!"
+    # sentence = "Albert Einstein was born at Ulm, in Württemberg, Germany, on March 14, 1879. Six weeks later the family moved to Munich, where he later on began his schooling at the Luitpold Gymnasium. Later, they moved to Italy and Albert continued his education at Aarau, Switzerland and in 1896 he entered the Swiss Federal Polytechnic School in Zurich to be trained as a teacher in physics and mathematics."
     pipe = NEROnnxModel()
-    results = pipe(query)
+    results = pipe(sentence)
     print(results)
 
