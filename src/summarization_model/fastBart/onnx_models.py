@@ -109,9 +109,7 @@ class OnnxBart(BartForConditionalGeneration):
     """creates a Bart model using onnx sessions (encode, decoder & init_decoder)"""
 
     def __init__(self, model_or_model_path, onnx_model_sessions):
-        config = AutoConfig.from_pretrained(
-            model_or_model_path, use_auth_token=get_auth_token()
-        )
+        config = AutoConfig.from_pretrained("models/summarization/model/")
         super().__init__(config)
 
         assert len(onnx_model_sessions) == 3, "all three models should be given"
