@@ -4,6 +4,6 @@ onnxruntime==1.10.0
 pydantic==1.9.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.11.0+cpu
-transformers==4.19.2
+transformers==4.10.0
 uvicorn==0.17.6
 fastt5==0.1.4
