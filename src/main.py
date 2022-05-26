@@ -4,7 +4,7 @@ from typing import List
 
 from .paraphrasing_model.onnx_T5_model import ParaphraseOnnxPipeline
 from .ner_model.onnx_ner_model import NEROnnxModel
-from.summarization_model.onnx_bart_model import SummarizeOnnxPipeline
+from .summarization_model.onnx_bart_model import SummarizeOnnxPipeline
 
 # load T5 paraphrasing model
 print('Loading T5 paraphrasing model & tokenizer...')
