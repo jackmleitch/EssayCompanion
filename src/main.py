@@ -4,21 +4,26 @@ from typing import List
 
 from .paraphrasing_model.onnx_T5_model import ParaphraseOnnxPipeline
 from .ner_model.onnx_ner_model import NEROnnxModel
+from.summarization_model.onnx_bart_model import SummarizeOnnxPipeline
 
-# load paraphrasing model
-print('Loading paraphrasing model & tokenizer...')
+# load T5 paraphrasing model
+print('Loading T5 paraphrasing model & tokenizer...')
 paraphrasing_pipeline = ParaphraseOnnxPipeline(num_beams=5)
-print('Paraphrasing model & tokenizer loaded!')
-# load NER model
-print('Loading NER model & tokenizer...')
+print('T5 paraphrasing model & tokenizer loaded!')
+# load distilbert NER model
+print('Loading distilbert NER model & tokenizer...')
 ner_pipeline = NEROnnxModel()
-print('NER model & tokenizer loaded!')
+print('distilbert NER model & tokenizer loaded!')
+# loading BART model
+print('Loading BART sumarization model & tokenizer...')
+summarization_pipeline = SummarizeOnnxPipeline(num_beams=8)
+print('BART sumarization model & tokenizer loaded!')
 
 app = FastAPI()
 
 class Request(BaseModel):
     text: str    
-class ParaphrasingResponse(BaseModel):
+class ParagraphResponse(BaseModel):
     text: str
 
 class EntityData(BaseModel):
@@ -37,10 +42,14 @@ class NERResponse(BaseModel):
 def get_root():
     return "This is the RESTful API for EssayCompanion"
 
-@app.post("/paraphrase", response_model=ParaphrasingResponse)
+@app.post("/paraphrase", response_model=ParagraphResponse)
 async def predict(request: Request):
-    return ParaphrasingResponse(text=paraphrasing_pipeline(request.text))
+    return ParagraphResponse(text=paraphrasing_pipeline(request.text))
 
 @app.post("/ner", response_model=NERResponse)
 async def predict(request: Request):
     return NERResponse(render_data=ner_pipeline(request.text))
+
+@app.post("/summarize", response_model=ParagraphResponse)
+async def predict(request: Request):
+    return ParagraphResponse(text=summarization_pipeline(request.text))
