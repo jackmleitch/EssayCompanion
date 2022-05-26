@@ -31,7 +31,7 @@ class OnnxT5(T5ForConditionalGeneration):
     Creates a T5 model using onnx sessions encode, decoder & init_decoder
     """
     def __init__(self, model_ckpt="ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"):
-        config = AutoConfig.from_pretrained(model_ckpt)
+        config = AutoConfig.from_pretrained("models/paraphrase/model/")
         super().__init__(config)
         encoder_session = create_model_for_provider("models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-encoder-quantized.onnx")
         decoder_init_session = create_model_for_provider("models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-init-decoder-quantized.onnx")
