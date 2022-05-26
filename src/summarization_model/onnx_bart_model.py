@@ -1,6 +1,6 @@
 import torch
 from transformers import AutoTokenizer
-from fastBart import get_onnx_model
+from .fastBart import get_onnx_model
 
 class SummarizeOnnxPipeline:
     """Model inference pipeline"""
