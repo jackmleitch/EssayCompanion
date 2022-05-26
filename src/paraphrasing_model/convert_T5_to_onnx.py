@@ -13,11 +13,13 @@ except Exception:
     nltk.download('punkt')
 
 model_ckpt = "ramsrigouthamg/t5-large-paraphraser-diverse-high-quality"
+output_path = "models/paraphrase/model"
 
-if not exists("models/t5-large-paraphraser-diverse-high-quality-decoder-quantized.onnx"):
+if not exists(
+    "models/paraphrase/model/t5-large-paraphraser-diverse-high-quality-encoder-quantized.onnx"):
     # export model to ONNX and quantize from 32bit to 8bit
     print(f"Exporting f{model_ckpt} to ONNX and quantizing...")
-    model = export_and_get_onnx_model(model_ckpt)
+    model = export_and_get_onnx_model(model_ckpt, output_path)
     print("Model exported and saved to /models directory")
 else:
     print("ONNX model already exists")
