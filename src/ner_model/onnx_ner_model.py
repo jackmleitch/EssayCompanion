@@ -150,7 +150,7 @@ class NEROnnxModel():
                 entry['end'] = entity_group['end']
                 entry['label'] = entity_group['entity_group']
                 entities.append(entry)
-        render_data = [{'text': sentence, 'ents': entities, 'title': None}]
+        render_data = {'text': sentence, 'ents': entities, 'title': None}
         return render_data
     
 if __name__ == '__main__':

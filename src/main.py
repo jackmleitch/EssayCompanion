@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Dict
+from starlette.middleware.cors import CORSMiddleware
 
 from .paraphrasing_model.onnx_T5_model import ParaphraseOnnxPipeline
 from .ner_model.onnx_ner_model import NEROnnxModel
@@ -9,7 +10,7 @@ from .keyword_model.keyword_extraction import GetKeywords
 
 # load T5 paraphrasing model
 print('Loading T5 paraphrasing model & tokenizer...')
-paraphrasing_pipeline = ParaphraseOnnxPipeline(num_beams=5)
+paraphrasing_pipeline = ParaphraseOnnxPipeline(num_beams=8)
 print('T5 paraphrasing model & tokenizer loaded!')
 
 # load distilbert NER model
@@ -29,6 +30,11 @@ print('KeyBERT model loaded!')
 
 app = FastAPI()
 
+# allow CORS requests from any host so that the JavaScript can communicate with the server
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+)
+
 class Request(BaseModel):
     text: str    
 class ParagraphResponse(BaseModel):
@@ -42,7 +48,7 @@ class RenderData(BaseModel):
     ents: List[EntityData]
     title: None
 class NERResponse(BaseModel):
-    render_data: List[RenderData]
+    render_data: RenderData
 class KeywordResponse(BaseModel):
     response: Dict[str, List[str]]
 class AllModelsResponse(BaseModel):
