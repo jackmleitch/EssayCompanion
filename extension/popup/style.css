@@ -1,0 +1,62 @@
+body{
+    background-color: #D4E4F7;
+}
+h1 { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.399999618530273px; } 
+h3 { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 100; line-height: 15.399999618530273px; }
+th { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 1000; line-height: 20px;} 
+td { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 20px;} 
+p { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 1000; line-height: 20px;} 
+blockquote { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
+pre { font-family: Geneva, Tahoma, Verdana, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.571430206298828px; }
+.entities {
+    line-height: 2;
+}
+
+[data-entity] {
+    padding: 0.25em 0.35em;
+     margin: 0px 0.25em;
+     line-height: 1;
+     display: inline-block;
+     border-radius: 0.25em;
+     border: 1px solid;
+}
+
+[data-entity]::after {
+    box-sizing: border-box;
+    content: attr(data-entity);
+    font-size: 0.6em;
+    line-height: 1;
+    padding: 0.35em;
+    border-radius: 0.35em;
+    text-transform: uppercase;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px 0px 0.1rem 0.5rem;
+}
+
+[data-entity][data-entity="PER"] {
+    background: rgba(166, 226, 45, 0.2);
+    border-color: rgb(166, 226, 45);
+}
+
+[data-entity][data-entity="PER"]::after {
+    background: rgb(166, 226, 45);
+}
+
+[data-entity][data-entity="ORG"] {
+    background: rgba(67, 198, 252, 0.2);
+    border-color: rgb(67, 198, 252);
+}
+
+[data-entity][data-entity="ORG"]::after {
+    background: rgb(67, 198, 252);
+}
+
+[data-entity][data-entity="MISC"] {
+    background: rgba(47, 187, 171, 0.2);
+    border-color: rgb(47, 187, 171);
+}
+
+[data-entity][data-entity="MISC"]::after {
+    background: rgb(47, 187, 171);
+}
