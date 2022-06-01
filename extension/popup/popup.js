@@ -98,12 +98,11 @@ function getResults() {
 function populateSynonyms(keyword_synonyms) {
     // String to display the keywords and synonyms in a tabular fashion
     keyword_synonyms_str = `
-    <hr>
     <table class="table m-2" style="font-size: small;">
         <thead>
             <tr>
                 <th scope="col">Keyword</th>
-                <th scope="col">Syonyms</th>
+                <th scope="col">Synonyms</th>
             </tr>
         </thead>
         <tbody>
