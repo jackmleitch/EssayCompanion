@@ -1,5 +1,5 @@
 // URL at which the API server is running
-base_url = "http://localhost:8000";
+base_url = "http://0.0.0.0:8000";
 
 // Inject _getSelectedTextFromTab into current page and 
 // populate the textarea for user input in the popup with the selected text
