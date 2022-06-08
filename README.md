@@ -11,7 +11,7 @@ The converted models along with their respective tokenizers can be downloaeded f
 First, you can use Docker to run the model API: 
 ```
 docker pull jackmleitch/essay-companion
-docker run -p 8000:8000 -d essay-companion
+docker run -p 8000:8000 -d jackmleitch/essay-companion
 ```
 Once the API is up and running, you can clone this repository and upload the extension directory to the 'Load unpacked' section in the Extensions tab of Google Chromes settings. Then you should see the extension and be able to use it! 
 
