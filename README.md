@@ -7,6 +7,11 @@ The T5 paraphrasing model, the Bart summarization model, and the DistilBERT NER 
 
 The converted models along with their respective tokenizers can be downloaeded from [here](https://drive.google.com/drive/folders/1_5FM97b717669T24vRv4fmU8W1Cwr8uO?usp=sharing). The 'models' directory needs to be saved at the root of the repository. 
 
+<p float="left">
+  <img src="https://github.com/jackmleitch/EssayCompanion/blob/main/extension/assets/icons/model_latency.png" width="500" /> 
+  <img src="https://github.com/jackmleitch/EssayCompanion/blob/main/extension/assets/icons/model_size.png" width="500" />
+</p>
+
 ## Try It Out For Yourself
 First, you can use Docker to run the model API: 
 ```
