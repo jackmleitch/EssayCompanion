@@ -7,3 +7,4 @@ torch==1.11.0+cpu
 transformers==4.10.0
 uvicorn==0.17.6
 fastt5==0.1.4
+keybert==0.5.1
