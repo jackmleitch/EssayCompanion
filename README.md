@@ -5,7 +5,7 @@ An NLP powered Google Chrome extension to summarize, paraphrase, get named entit
 ## Model Optimization
 The T5 paraphrasing model, the Bart summarization model, and the DistilBERT NER model were all converted to ONNX and then were quantized to QInt8 for faster inference. All models were then deployed to an inference endpoint using FastAPI. 
 
-The converted models along with their respective tokenizers can be downloaeded from [here](https://drive.google.com/drive/folders/1_5FM97b717669T24vRv4fmU8W1Cwr8uO?usp=sharing). The 'models' directory needs to be saved at the root of the repository. 
+The converted models along with their respective tokenizers can be downloaded from [here](https://drive.google.com/drive/folders/1_5FM97b717669T24vRv4fmU8W1Cwr8uO?usp=sharing). The 'models' directory needs to be saved at the root of the repository. 
 
 <p float="left">
   <img src="https://github.com/jackmleitch/EssayCompanion/blob/main/extension/assets/icons/model_latency.png" width="500" /> 
