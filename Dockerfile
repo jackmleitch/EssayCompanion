@@ -8,9 +8,7 @@ RUN apt-get update \
     && apt-get install python3-dev python3-pip -y \
     && pip3 install -r requirements.txt
 
-RUN python3 -m nltk.downloader punkt
-RUN python3 -m nltk.downloader wordnet
-RUN python3 -m nltk.downloader omw-1.4
+RUN python3 -m nltk.downloader punkt wordnet omw-1.4
 
 ENV PYTHONPATH=/api
 WORKDIR /api
